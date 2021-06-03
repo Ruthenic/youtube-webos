@@ -1,0 +1,20 @@
+diff a/appinfo.json b/appinfo.json	(rejected hunks)
+@@ -4,9 +4,10 @@
+   "vendor": "My Company",
+   "type": "web",
+   "main": "index.html",
+-  "title": "Youtube Without ADs",
++  "title": "YouTube AdFree",
+   "icon": "icon.png",
+   "largeIcon": "largeIcon.png",
++  "iconColor": "#ff0000",
+   "support360Content": true,
+   "accessibility": {
+     "supportsAudioGuidance": true
+@@ -20,4 +21,4 @@
+   "dialAppName": "YouTube",
+   "disableBackHistoryAPI": true,
+   "noSplashOnLaunch": true
+-}
+\ No newline at end of file
++}
