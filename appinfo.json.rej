@@ -1,0 +1,8 @@
+diff a/appinfo.json b/appinfo.json	(rejected hunks)
+@@ -20,4 +21,4 @@
+   "dialAppName": "YouTube",
+   "disableBackHistoryAPI": true,
+   "noSplashOnLaunch": true
+-}
+\ No newline at end of file
++}
