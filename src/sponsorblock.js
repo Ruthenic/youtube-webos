@@ -1,5 +1,6 @@
 import sha256 from 'tiny-sha256';
 import {configRead} from './config';
+<<<<<<< HEAD
 
 // Copied from https://github.com/ajayyy/SponsorBlock/blob/9392d16617d2d48abb6125c00e2ff6042cb7bebe/src/config.ts#L179-L233
 const barTypes = {
@@ -62,6 +63,59 @@ class SponsorBlockHandler {
     this.videoID = videoID;
     this.video = video;
     this.active = true;
+=======
+import {showNotification} from './ui';
+
+// Copied from https://github.com/ajayyy/SponsorBlock/blob/9392d16617d2d48abb6125c00e2ff6042cb7bebe/src/config.ts#L179-L233
+const barTypes = {
+  "sponsor": {
+    color: "#00d400",
+    opacity: "0.7",
+    name: "sponsored segment",
+  },
+  "intro": {
+    color: "#00ffff",
+    opacity: "0.7",
+    name: "intro",
+  },
+  "outro": {
+    color: "#0202ed",
+    opacity: "0.7",
+    name: "outro",
+  },
+  "interaction": {
+    color: "#cc00ff",
+    opacity: "0.7",
+    name: "interaction reminder",
+  },
+  "selfpromo": {
+    color: "#ffff00",
+    opacity: "0.7",
+    name: "self-promotion",
+  },
+  "music_offtopic": {
+    color: "#ff9900",
+    opacity: "0.7",
+    name: "non-music part",
+  },
+};
+
+class SponsorBlockHandler {
+  video = null;
+  active = true;
+
+  attachVideoTimeout = null;
+  nextSkipTimeout = null;
+  sliderInterval = null;
+
+  observer = null;
+  scheduleSkipHandler = null;
+  durationChangeHandler = null;
+  segments = null;
+
+  constructor(videoID) {
+    this.videoID = videoID;
+>>>>>>> 4f8fc37d8b92b95c5268297838f0bbae1bce189a
   }
 
   async init() {
@@ -80,17 +134,43 @@ class SponsorBlockHandler {
 
     this.segments = result.segments;
 
+<<<<<<< HEAD
     console.info(this.videoID, 'Video found, binding...');
 
     this.scheduleSkipHandler = () => this.scheduleSkip();
     this.durationChangeHandler = () => this.buildOverlay();
 
+=======
+    this.scheduleSkipHandler = () => this.scheduleSkip();
+    this.durationChangeHandler = () => this.buildOverlay();
+
+    this.attachVideo();
+    this.buildOverlay();
+  }
+
+  attachVideo() {
+    clearTimeout(this.attachVideoTimeout);
+    this.attachVideoTimeout = null;
+
+    this.video = document.querySelector('video');
+    if (!this.video) {
+      console.info(this.videoID, 'No video yet...');
+      this.attachVideoTimeout = setTimeout(() => this.attachVideo(), 100);
+      return;
+    }
+
+    console.info(this.videoID, 'Video found, binding...');
+
+>>>>>>> 4f8fc37d8b92b95c5268297838f0bbae1bce189a
     this.video.addEventListener('play', this.scheduleSkipHandler);
     this.video.addEventListener('pause', this.scheduleSkipHandler);
     this.video.addEventListener('timeupdate', this.scheduleSkipHandler);
     this.video.addEventListener('durationchange', this.durationChangeHandler);
+<<<<<<< HEAD
 
     this.buildOverlay();
+=======
+>>>>>>> 4f8fc37d8b92b95c5268297838f0bbae1bce189a
   }
 
   buildOverlay() {
@@ -99,7 +179,11 @@ class SponsorBlockHandler {
       return;
     }
 
+<<<<<<< HEAD
     if (!this.video.duration) {
+=======
+    if (!this.video || !this.video.duration) {
+>>>>>>> 4f8fc37d8b92b95c5268297838f0bbae1bce189a
       console.info('No video duration yet');
       return;
     }
@@ -147,8 +231,13 @@ class SponsorBlockHandler {
   }
 
   scheduleSkip() {
+<<<<<<< HEAD
     clearTimeout(this.nextSkip);
     this.nextSkip = null;
+=======
+    clearTimeout(this.nextSkipTimeout);
+    this.nextSkipTimeout = null;
+>>>>>>> 4f8fc37d8b92b95c5268297838f0bbae1bce189a
 
     if (!this.active) {
       console.info(this.videoID, 'No longer active, ignoring...');
@@ -163,7 +252,11 @@ class SponsorBlockHandler {
     // Sometimes timeupdate event (that calls scheduleSkip) gets fired right before
     // already scheduled skip routine below. Let's just look back a little bit
     // and, in worst case, perform a skip at negative interval (immediately)...
+<<<<<<< HEAD
     const nextSegments = this.segments.filter(seg => seg.segment[0] > this.video.currentTime - 0.1 && seg.segment[1] > this.video.currentTime - 0.1);
+=======
+    const nextSegments = this.segments.filter(seg => seg.segment[0] > this.video.currentTime - 0.3 && seg.segment[1] > this.video.currentTime - 0.3);
+>>>>>>> 4f8fc37d8b92b95c5268297838f0bbae1bce189a
     nextSegments.sort((s1, s2) => s1.segment[0] - s2.segment[0]);
 
     if (!nextSegments.length) {
@@ -171,16 +264,30 @@ class SponsorBlockHandler {
       return;
     }
 
+<<<<<<< HEAD
     const [start, end] = nextSegments[0].segment;
     console.info(this.videoID, 'Scheduling skip of', nextSegments[0], 'in', start - this.video.currentTime);
 
     this.nextSkip = setTimeout(() => {
+=======
+    const [segment] = nextSegments;
+    const [start, end] = segment.segment;
+    console.info(this.videoID, 'Scheduling skip of', segment, 'in', start - this.video.currentTime);
+
+    this.nextSkipTimeout = setTimeout(() => {
+>>>>>>> 4f8fc37d8b92b95c5268297838f0bbae1bce189a
       if (this.video.paused) {
         console.info(this.videoID, 'Currently paused, ignoring...');
         return;
       }
 
+<<<<<<< HEAD
       console.info(this.videoID, 'Skipping', nextSegments[0]);
+=======
+      const skipName = barTypes[segment.category]?.name || segment.category;
+      console.info(this.videoID, 'Skipping', segment);
+      showNotification(`Skipping ${skipName}`);
+>>>>>>> 4f8fc37d8b92b95c5268297838f0bbae1bce189a
       this.video.currentTime = end;
       this.scheduleSkip();
     }, (start - this.video.currentTime) * 1000);
@@ -191,9 +298,20 @@ class SponsorBlockHandler {
 
     this.active = false;
 
+<<<<<<< HEAD
     if (this.nextSkip) {
       clearTimeout(this.nextSkip);
       this.nextSkip = null;
+=======
+    if (this.nextSkipTimeout) {
+      clearTimeout(this.nextSkipTimeout);
+      this.nextSkipTimeout = null;
+    }
+
+    if (this.attachVideoTimeout) {
+      clearTimeout(this.attachVideoTimeout);
+      this.attachVideoTimeout = null;
+>>>>>>> 4f8fc37d8b92b95c5268297838f0bbae1bce189a
     }
 
     if (this.sliderInterval) {
@@ -211,10 +329,19 @@ class SponsorBlockHandler {
       this.segmentsoverlay = null;
     }
 
+<<<<<<< HEAD
     this.video.removeEventListener('play', this.scheduleSkipHandler);
     this.video.removeEventListener('pause', this.scheduleSkipHandler);
     this.video.removeEventListener('timeupdate', this.scheduleSkipHandler);
     this.video.removeEventListener('durationchange', this.durationChangeHandler);
+=======
+    if (this.video) {
+      this.video.removeEventListener('play', this.scheduleSkipHandler);
+      this.video.removeEventListener('pause', this.scheduleSkipHandler);
+      this.video.removeEventListener('timeupdate', this.scheduleSkipHandler);
+      this.video.removeEventListener('durationchange', this.durationChangeHandler);
+    }
+>>>>>>> 4f8fc37d8b92b95c5268297838f0bbae1bce189a
   }
 }
 
@@ -244,8 +371,12 @@ window.addEventListener("hashchange", (evt) => {
     }
 
     if (configRead('enableSponsorBlock')) {
+<<<<<<< HEAD
       const video = document.querySelector('video');
       window.sponsorblock = new SponsorBlockHandler(videoID, video);
+=======
+      window.sponsorblock = new SponsorBlockHandler(videoID);
+>>>>>>> 4f8fc37d8b92b95c5268297838f0bbae1bce189a
       window.sponsorblock.init();
     } else {
       console.info('SponsorBlock disabled, not loading');
