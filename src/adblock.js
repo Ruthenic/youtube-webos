@@ -81,7 +81,11 @@ JSON.parse = function () {
 
   // Drop "masthead" ad from home screen
   if (r?.contents?.tvBrowseRenderer?.content?.tvSurfaceContentRenderer?.content?.sectionListRenderer?.contents && configRead('enableAdBlock')) {
+<<<<<<< HEAD:src/adblock.js
     r.contents.tvBrowseRenderer.content.tvSurfaceContentRenderer.content.sectionListRenderer.contents = \
+=======
+    r.contents.tvBrowseRenderer.content.tvSurfaceContentRenderer.content.sectionListRenderer.contents =
+>>>>>>> 4f8fc37d8b92b95c5268297838f0bbae1bce189a:webOSUserScripts/userScript.js
       r.contents.tvBrowseRenderer.content.tvSurfaceContentRenderer.content.sectionListRenderer.contents.filter(elm => !elm.tvMastheadRenderer);
   }
 
